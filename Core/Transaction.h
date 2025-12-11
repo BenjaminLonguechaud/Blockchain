@@ -1,13 +1,18 @@
-#include <string>
+#ifndef TRANSACTION_H
+#define TRANSACTION_H
+
+#include <CoreObject.h>
 #include <vector>
 #include <cstdint>
 
 /**
- * Represents a value transfer or message.
+ * @file Transaction.h
+ * @brief Definition of the Transaction class representing a blockchain transaction.
+ * @details This class encapsulates the essential components of a blockchain transaction,
+ *         including inputs, outputs, timestamp, and methods for serialization,
+ *        hash computation, and validation.
+ * https://en.bitcoin.it/wiki/Transaction
  */
-
-// 256-bit hash represented as an hex string
-using TXID = std::string;
 
 // Input of a transaction to ensure ownership and prevent double spending.
 struct TxIn {
@@ -38,7 +43,7 @@ TxOut(uint64_t amount, const std::string& publicKeyHash)
         : amount(amount), publicKeyHash(publicKeyHash) {}
 };
 
-class Transaction {
+class Transaction : public CoreObject {
 public:
 
     std::string txid;
@@ -60,12 +65,11 @@ public:
     Transaction(const std::vector<TxIn>& ins,
                     const std::vector<TxOut>& outs);
 
-    // Compute unique TXID (SHA-256 of the serialized content)
-    TXID computeHash() const;
-
-    // Validate transaction structur
+    // Validate transaction structure
     bool validate() const;
 
-    // Convert the whole transaction into a deterministic string
-    std::string serialize() const;
+    // Serialize the transaction into a deterministic string
+    std::string serialize() const override;
 };
+
+#endif // TRANSACTION_H

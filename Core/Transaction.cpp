@@ -2,8 +2,7 @@
 #include <sstream>
 #include <iomanip>
 #include <chrono>
-#include <../cryptopp/sha.h>
-#include <../cryptopp/hex.h>
+
 
 Transaction::Transaction()
     : timestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -19,29 +18,6 @@ Transaction::Transaction(const std::vector<TxIn>& ins,
                     std::chrono::system_clock::now().time_since_epoch()).count())
 {
     txid = computeHash();
-}
-
-
-// -----------------------------------------------------------------------------
-//  computeHash()
-//  Produces the TXID by hashing the serialized transaction.
-// -----------------------------------------------------------------------------
-TXID Transaction::computeHash() const
-{
-	// Converts a Transaction object into a single, deterministic
-	// sequence of bytes (or a string) that can be hashed
-	std::string data = serialize();
-	CryptoPP::SHA256 hash;
-	std::string digest;
-    CryptoPP::StringSource(data, true,
-        new CryptoPP::HashFilter(hash,
-            new CryptoPP::HexEncoder(
-                new CryptoPP::StringSink(digest)
-            )
-        )
-    );
-
-    return digest;
 }
 
 // -----------------------------------------------------------------------------

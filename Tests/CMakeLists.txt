@@ -45,18 +45,16 @@ set_target_properties(cryptopp_lib PROPERTIES COMPILE_FLAGS "/MT")
 # Disable ASM and some advanced features to avoid linking issues
 target_compile_definitions(cryptopp_lib PUBLIC CRYPTOPP_DISABLE_ASM CRYPTOPP_DISABLE_MIXED_MPI)
 
+### Transaction Test ###
 add_executable(test_Transaction
     ../Core/Transaction.cpp
+    ../Core/CoreObject.cpp
     test_Transaction.cpp
 )
-
 target_include_directories(test_Transaction PRIVATE ../Core ../cryptopp)
-
 # Link against Google Test and CryptoPP
 target_link_libraries(test_Transaction PRIVATE gtest_main gtest cryptopp_lib)
-
 # Include stub implementations for CryptoPP utility functions
 target_sources(test_Transaction PRIVATE cryptopp_stubs.cpp)
-
 include(GoogleTest)
 gtest_discover_tests(test_Transaction)
