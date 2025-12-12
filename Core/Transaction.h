@@ -65,6 +65,10 @@ public:
     Transaction(const std::vector<TxIn>& ins,
                     const std::vector<TxOut>& outs);
 
+    /**
+     * Computes the hash of the Transaction.
+     */
+    void computeHash();
     // Validate transaction structure
     bool validate() const;
 

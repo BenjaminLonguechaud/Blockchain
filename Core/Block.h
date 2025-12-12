@@ -23,6 +23,10 @@ public:
     void computeMerkleRoot();
 
     /**
+     * Computes the hash of the block.
+     */
+    void Block::computeHash();
+    /**
      * Serializes the block into a deterministic string representation.
      * Combines header and all transaction data for hashing.
      */

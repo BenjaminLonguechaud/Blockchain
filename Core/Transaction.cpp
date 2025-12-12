@@ -8,7 +8,7 @@ Transaction::Transaction()
     : timestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::system_clock::now().time_since_epoch()).count())
 {
-    txid = computeHash();
+    computeHash();
 }
 
 Transaction::Transaction(const std::vector<TxIn>& ins,
@@ -17,7 +17,7 @@ Transaction::Transaction(const std::vector<TxIn>& ins,
 		  timestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::system_clock::now().time_since_epoch()).count())
 {
-    txid = computeHash();
+    computeHash();
 }
 
 // -----------------------------------------------------------------------------
@@ -39,6 +39,26 @@ bool Transaction::validate() const
 	// Additional checks can be added here (e.g., signature verification)
 
 	return true; // Passed all checks
+// -----------------------------------------------------------------------------
+//  computeHash()
+//  Produces the TXID by hashing the serialized transaction.
+// -----------------------------------------------------------------------------
+void Transaction::computeHash()
+{
+    // Converts a Transaction object into a single, deterministic
+    // sequence of bytes (or a string) that can be hashed
+    std::string data = serialize();
+    CryptoPP::SHA256 hash;
+    std::string digest;
+    CryptoPP::StringSource(data, true,
+        new CryptoPP::HashFilter(hash,
+            new CryptoPP::HexEncoder(
+                new CryptoPP::StringSink(digest)
+            )
+        )
+    );
+
+    txid = digest;
 }
 
 // -----------------------------------------------------------------------------

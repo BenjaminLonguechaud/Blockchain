@@ -34,7 +34,7 @@ public:
     uint32_t nonce;
     // Difficulty is a measure of how difficult it is to find a hash below a given target.
     uint32_t difficulty;
-    //The hash of the header itself, serving as the block's unique identifier and proof of work.
+    //The hash of the block itself, serving as the block's unique identifier and proof of work.
     std::string blockHash;
 
     // Constructor to initialize BlockHeader with default values

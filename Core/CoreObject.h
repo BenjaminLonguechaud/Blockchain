@@ -19,10 +19,6 @@ public:
     virtual std::string serialize() const = 0;
 
     virtual ~CoreObject() = default;
-
-	// Compute unique TXID (SHA-256 of the serialized content)
-    TXID computeHash() const;
-
 };
 
 #endif // COREOBJECT_H

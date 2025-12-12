@@ -1,6 +1,26 @@
 #include <Block.h>
 #include <sstream>
 
+// -----------------------------------------------------------------------------
+//  computeHash()
+// -----------------------------------------------------------------------------
+void Block::computeHash()
+{
+	// Converts a Transaction object into a single, deterministic
+	// sequence of bytes (or a string) that can be hashed
+	std::string data = serialize();
+	CryptoPP::SHA256 hash;
+	std::string digest;
+    CryptoPP::StringSource(data, true,
+        new CryptoPP::HashFilter(hash,
+            new CryptoPP::HexEncoder(
+                new CryptoPP::StringSink(digest)
+            )
+        )
+    );
+
+    header.blockHash = digest;
+}
 void Block::computeMerkleRoot()
 {
     // Step 1: Validate input - Check if the block contains any transactions
@@ -78,6 +98,7 @@ std::string Block::serialize() const
     oss << header.timestamp;
     oss << header.nonce;
     oss << header.difficulty;
+    oss << header.blockHash;
 
     // Serialize all transactions
     for (const auto& tx : transactions) {
