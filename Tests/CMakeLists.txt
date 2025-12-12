@@ -71,3 +71,18 @@ target_link_libraries(test_BlockHeader PRIVATE gtest_main gtest cryptopp_lib)
 # Include stub implementations for CryptoPP utility functions
 target_sources(test_BlockHeader PRIVATE cryptopp_stubs.cpp)
 gtest_discover_tests(test_BlockHeader)
+
+### Block Test ###
+add_executable(test_Block
+    ../Core/Block.cpp
+    ../Core/Blockheader.cpp
+    ../Core/Transaction.cpp
+    ../Core/CoreObject.cpp
+    test_Block.cpp
+)
+target_include_directories(test_Block PRIVATE ../Core ../cryptopp)
+# Link against Google Test and CryptoPP
+target_link_libraries(test_Block PRIVATE gtest_main gtest cryptopp_lib)
+# Include stub implementations for CryptoPP utility functions
+target_sources(test_Block PRIVATE cryptopp_stubs.cpp)
+gtest_discover_tests(test_Block)
