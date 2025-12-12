@@ -47,6 +47,7 @@ class Transaction : public CoreObject {
 public:
 
     std::string txid;
+    std::string txsignature;
     std::vector<TxIn> inputs;
     std::vector<TxOut> outputs;
     uint64_t timestamp;
@@ -54,10 +55,12 @@ public:
     Transaction();
 
     Transaction(std::string id,
+                    std::string signature,
                     std::vector<TxIn> in,
                     std::vector<TxOut> out,
                     uint64_t ts) :
             txid(std::move(id)),
+            txsignature(std::move(signature)),
             inputs(std::move(in)),
             outputs(std::move(out)),
             timestamp(ts) {}
@@ -69,11 +72,16 @@ public:
      * Computes the hash of the Transaction.
      */
     void computeHash();
+
+    // Sign the transaction
+    void sign();
+
     // Validate transaction structure
     bool validate() const;
 
     // Serialize the transaction into a deterministic string
     std::string serialize() const override;
+
 };
 
 #endif // TRANSACTION_H

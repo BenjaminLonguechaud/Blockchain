@@ -6,16 +6,18 @@
 
 Transaction::Transaction()
     : timestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()).count())
+                    std::chrono::system_clock::now().time_since_epoch()).count()),
+    txsignature("")
 {
     computeHash();
 }
 
 Transaction::Transaction(const std::vector<TxIn>& ins,
-						 const std::vector<TxOut>& outs)
-		: inputs(ins), outputs(outs),
-		  timestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()).count())
+                         const std::vector<TxOut>& outs)
+    : inputs(ins), outputs(outs),
+      timestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()).count()),
+    txsignature("")
 {
     computeHash();
 }
@@ -84,4 +86,15 @@ std::string Transaction::serialize() const
     return oss.str();
 }
 
+void Transaction::sign()
+{
+    // Placeholder for signing logic
+    // In a real implementation, this would involve cryptographic operations
+    // to sign the transaction inputs using the private keys corresponding
+    // to the public keys in the inputs.
+
+    // For now, we just set a dummy signature for each input
+    for (auto& input : inputs) {
+        input.signature = "dummy_signature";
+    }
 }
