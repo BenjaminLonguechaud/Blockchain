@@ -25,20 +25,22 @@ Transaction::Transaction(const std::vector<TxIn>& ins,
 // -----------------------------------------------------------------------------
 bool Transaction::validate() const
 {
-	// Basic checks
-	if (inputs.empty() || outputs.empty()) {
-		return false; // A valid transaction must have at least one input and one output
-	}
+    // Basic checks
+    if (inputs.empty() || outputs.empty()) {
+        return false; // A valid transaction must have at least one input and one output
+    }
 
-	for (const auto& output : outputs) {
-		if (output.amount == 0) {
-			return false; // Outputs must have a non-zero amount
-		}
-	}
+    for (const auto& output : outputs) {
+        if (output.amount == 0) {
+            return false; // Outputs must have a non-zero amount
+        }
+    }
 
-	// Additional checks can be added here (e.g., signature verification)
+    // Additional checks can be added here (e.g., signature verification)
 
-	return true; // Passed all checks
+    return true; // Passed all checks
+}
+
 // -----------------------------------------------------------------------------
 //  computeHash()
 //  Produces the TXID by hashing the serialized transaction.
@@ -67,17 +69,19 @@ void Transaction::computeHash()
 // -----------------------------------------------------------------------------
 std::string Transaction::serialize() const
 {
-	std::ostringstream oss;
-	oss << timestamp;
+    std::ostringstream oss;
+    oss << timestamp;
 
-	for (const auto& input : inputs) {
-		oss << input.prevTxID << input.outputIndex
-			<< input.signature << input.publicKey;
-	}
+    for (const auto& input : inputs) {
+        oss << input.prevTxID << input.outputIndex
+            << input.signature << input.publicKey;
+    }
 
-	for (const auto& output : outputs) {
-		oss << output.amount << output.publicKeyHash;
-	}
+    for (const auto& output : outputs) {
+        oss << output.amount << output.publicKeyHash;
+    }
 
-	return oss.str();
+    return oss.str();
+}
+
 }
