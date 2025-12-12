@@ -26,6 +26,13 @@ public:
      * Computes the hash of the block.
      */
     void Block::computeHash();
+
+    /**
+     * Mines the block by finding a nonce that results in a hash
+     * below the target defined by the difficulty.
+     */
+    void mineBlock();
+
     /**
      * Serializes the block into a deterministic string representation.
      * Combines header and all transaction data for hashing.

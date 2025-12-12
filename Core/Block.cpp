@@ -21,6 +21,26 @@ void Block::computeHash()
 
     header.blockHash = digest;
 }
+
+// -----------------------------------------------------------------------------
+// mineBlock()
+// Repeatedly changes the nonce and recalculates the hash until it meets
+// the difficulty target.
+// -----------------------------------------------------------------------------
+void Block::mineBlock()
+{
+    std::string target(header.difficulty / 4, '0'); // Each hex digit represents 4 bits
+
+    do {
+        header.nonce++;
+        computeHash();
+    } while (header.blockHash.substr(0, target.size()) != target);
+}
+
+// -----------------------------------------------------------------------------
+// computeMerkleRoot()
+// Computes the Merkle root from the transactions in the block.
+// -----------------------------------------------------------------------------
 void Block::computeMerkleRoot()
 {
     // Step 1: Validate input - Check if the block contains any transactions
