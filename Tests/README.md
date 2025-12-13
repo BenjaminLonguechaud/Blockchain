@@ -2,7 +2,7 @@
 
 ## Project Description
 
-This directory contains the comprehensive **Google Test** test suite for the core blockchain classes: `Transaction`, `BlockHeader`, and `Block`. The test suites validate the fundamental functionality of blockchain implementation, including:
+This directory contains the comprehensive **Google Test** test suite for the core blockchain classes. The test suites validate the fundamental functionality of blockchain implementation, including:
 
 ### Transaction Testing
 - **Construction**: Automatic timestamp assignment and TXID computation
@@ -22,33 +22,6 @@ This directory contains the comprehensive **Google Test** test suite for the cor
 - **Merkle Tree Computation**: Building merkle trees from transaction hashes
 - **Block Validation**: Detecting tampering and corruption via merkle root verification
 - **Determinism**: Identical transactions produce identical merkle roots
-
-**Total Test Coverage: 48 test cases** (10 Transaction + 15 BlockHeader + 23 Block)
-
----
-
-## Project Structure
-
-```
-Tests/
-├── CMakeLists.txt              # CMake build configuration
-├── test_Transaction.cpp         # Transaction test suite (10 tests)
-├── test_BlockHeader.cpp         # BlockHeader test suite (15 tests)
-├── test_Block.cpp              # Block test suite (23 tests)
-├── cryptopp_stubs.cpp          # Stub implementations for CryptoPP utilities
-├── README.md                    # This file
-
-Core/
-├── Transaction.h               # Transaction class definition
-├── Transaction.cpp             # Transaction class implementation
-├── BlockHeader.h               # BlockHeader class definition
-├── BlockHeader.cpp             # BlockHeader class implementation
-├── Block.h                     # Block class definition
-└── Block.cpp                   # Block class implementation
-
-cryptopp/
-└── [Crypto++ library source files]
-```
 
 ---
 
@@ -99,56 +72,22 @@ cl.exe /?  # Should output compiler info
 cd "Blockchain\Tests\build"
 ```
 
-2. **Configure the build with CMake:**
-```powershell
-cmake .. -G "Visual Studio 18 2026"
-```
-
-3. **Build the project:**
+2. **Build the project:**
 ```powershell
 cmake --build . --config Release
 ```
 
-4. **Run the tests:**
+3. **Run the tests:**
 ```powershell
 # Run all test suites
-.\Release\test_Transaction.exe   # 10 tests
-.\Release\test_BlockHeader.exe   # 15 tests
-.\Release\test_Block.exe         # 23 tests
+.\Release\test_Transaction.exe
+.\Release\test_BlockHeader.exe
+.\Release\test_Block.exe
 ```
-
-### Expected Output (All Tests Pass)
-```
-[==========] Running 10 tests from 1 test suite.
-[----------] 10 tests from TransactionTest
-[ RUN      ] TransactionTest.ConstructorSetsTimestamp
-[       OK ] TransactionTest.ConstructorSetsTimestamp (0 ms)
-...
-[==========] 10 tests from 1 test suite ran. (19 ms total)
-[  PASSED  ] 10 tests.
-
-[==========] Running 15 tests from 1 test suite.
-[----------] 15 tests from BlockHeaderTest
-[ RUN      ] BlockHeaderTest.DefaultConstructorInitializesFields
-[       OK ] BlockHeaderTest.DefaultConstructorInitializesFields (0 ms)
-...
-[==========] 15 tests from 1 test suite ran. (6 ms total)
-[  PASSED  ] 15 tests.
-
-[==========] Running 23 tests from 1 test suite.
-[----------] 23 tests from BlockTest
-[ RUN      ] BlockTest.DefaultConstructorInitializesFields
-[       OK ] BlockTest.DefaultConstructorInitializesFields (0 ms)
-...
-[==========] 23 tests from 1 test suite ran. (7 ms total)
-[  PASSED  ] 23 tests.
-```
-
----
 
 ## Test Cases Overview
 
-### Transaction Tests (10 total)
+### Transaction Tests
 
 | Test Name | Purpose |
 |-----------|---------|
@@ -163,28 +102,17 @@ cmake --build . --config Release
 | `MultipleInputsOutputsSerializeCorrectly` | Validates serialization with multiple I/O |
 | `IDStableAfterInitialComputation` | Ensures TXID doesn't change after computation |
 
-### BlockHeader Tests (15 total)
+### BlockHeader Tests
 
 | Test Name | Purpose |
 |-----------|---------|
 | `DefaultConstructorInitializesFields` | Validates all fields initialized |
 | `SerializeIncludesAllFields` | Confirms all fields in serialization |
 | `SerializationIsConsistent` | Ensures repeated serializations match |
-| `ComputeHashReturnsNonEmpty` | Validates hash computation produces output |
-| `DifferentDataProducesDifferentHash` | Confirms data changes affect hash |
-| `PreviousBlockHashLinking` | Validates chain linking mechanism |
-| `ModifyingFieldChangesHash` | Confirms field modifications change hash |
-| `AllFieldsAffectHash` | Tests that each field contributes to hash |
-| `ZeroTimestampIsValid` | Edge case: zero timestamp handling |
-| `LargeValueHandling` | Edge case: large field values |
-| `EmptyHashFieldsAreValid` | Edge case: empty hash strings |
-| `MiningSimulationIncrementingNonce` | Simulates proof-of-work mining |
-| `RepeatedComputeHashesDeterministic` | Confirms deterministic hashing |
-| `ComputeHashReturnsHexFormat` | Validates hex format output |
-| `DifferentHeadersProduceDifferentLength64Hashes` | Confirms unique hashes |
 
-### Block Tests (23 total)
+### Block Tests
 
+**Merkle Tree Tests:**
 | Test Name | Purpose |
 |-----------|---------|
 | `DefaultConstructorInitializesFields` | Validates block initialization |
@@ -192,24 +120,24 @@ cmake --build . --config Release
 | `CanAddMultipleTransactions` | Tests multiple transaction addition |
 | `ComputeMerkleRootEmptyTransactions` | Edge case: empty block |
 | `ComputeMerkleRootSingleTransaction` | Single transaction merkle root |
-| `ComputeMerkleRootTwoTransactions` | Two transaction merkle tree |
 | `ComputeMerkleRootMultipleTransactions` | Multiple transaction merkle tree |
 | `ComputeMerkleRootDeterministic` | Ensures deterministic merkle roots |
-| `ComputeMerkleRootUpdatesHeaderField` | Validates header field update |
-| `ComputeMerkleRootOddNumberTransactions` | Odd number handling |
-| `ValidateEmptyBlockFails` | Empty block validation fails |
-| `ValidateBlockWithCorrectMerkleRoot` | Valid block passes validation |
-| `ValidateBlockWithIncorrectMerkleRoot` | Invalid merkle root detected |
 | `ValidateDetectsTamperedTransaction` | Transaction tampering detection |
-| `ValidateMultipleTransactions` | Validation with multiple transactions |
-| `CanSetPreviousBlockHash` | Block linking functionality |
 | `MerkleRootHexFormat` | Hex format validation |
-| `DifferentTransactionsDifferentMerkleRoot` | Different txs = different roots |
-| `LargeNumberOfTransactions` | Scalability: many transactions |
-| `PowerOfTwoTransactions` | Power-of-two transaction count |
-| `RepeatedMerkleRootComputationConsistent` | Merkle root consistency |
-| `BlockHeaderMaintainsState` | Header state preservation |
 | `TransactionOrderMatters` | Transaction order affects merkle root |
+
+**Block Hash Tests (transferred from BlockHeader):**
+| Test Name | Purpose |
+|-----------|---------|
+| `ComputeHashReturnsNonEmpty` | Validates hash computation produces output |
+| `DifferentBlockDataProducesDifferentHash` | Confirms data changes affect hash |
+| `BlockPreviousHashLinking` | Validates chain linking mechanism |
+| `ModifyingHeaderFieldChangesBlockHash` | Confirms field modifications change hash |
+| `AllBlockHeaderFieldsAffectHash` | Tests that each field contributes to hash |
+| `MiningIncrementingNonce` | Simulates proof-of-work mining |
+| `RepeatedBlockHashComputationIsDeterministic` | Confirms deterministic hashing |
+| `BlockHashReturnsHexFormat` | Validates hex format output |
+| `DifferentBlocksProduceDifferentLength64Hashes` | Confirms unique hashes |
 
 ---
 
@@ -224,7 +152,7 @@ cmake --build . --config Release
 
 ## Summary
 
-This comprehensive test suite provides thorough validation of all core blockchain components: Transaction, BlockHeader, and Block classes. With 48 total test cases covering construction, serialization, hashing, merkle tree computation, and block validation, the test suite ensures correctness, determinism, and tampering detection. Through careful configuration of CMake, Google Test, and Crypto++, combined with strategic solutions for runtime library mismatches and dependency management, we have created a robust, reproducible build system that validates fundamental blockchain operations.
+This comprehensive test suite provides thorough validation of all core blockchain components: Transaction, BlockHeader, and Block classes. The test suite ensures correctness, determinism, and tampering detection.
 
 
 ## Issues Encountered and Solutions

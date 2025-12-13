@@ -20,9 +20,10 @@ The library is designed with educational purposes in mind, providing clean inter
 
 ```
 Blockchain/
-├── README.md                          # This file
+├── README.md                         # This file
 ├── Core/
-│   ├── Transaction.h                 # Transaction class definition
+│   ├── CoreObject.h                  # Parent Class
+│	├── Transaction.h                 # Transaction class definition
 │   ├── Transaction.cpp               # Transaction implementation with SHA-256 hashing
 │   ├── BlockHeader.h                 # BlockHeader class definition
 │   ├── BlockHeader.cpp               # BlockHeader implementation for block metadata
@@ -49,6 +50,7 @@ The `Transaction` class is the core of this blockchain library:
 - **Inputs & Outputs**: Supports multiple transaction inputs and outputs (UTXO model)
 - **Timestamps**: Millisecond-precision timestamps for transaction ordering
 - **Serialization**: Deterministic serialization ensuring identical data produces identical hashes
+- **Signature**: Cryptographic proof of Transaction's ownership and authorization
 
 ### Block Header System
 
@@ -94,9 +96,6 @@ cd Tests
 mkdir build
 cd build
 
-# Configure build
-cmake .. -G "Visual Studio 17 2022"
-
 # Build
 cmake --build . --config Release
 ```
@@ -105,20 +104,18 @@ cmake --build . --config Release
 
 ```powershell
 # From the Tests/build directory
-.\Release\test_Transaction.exe     # Run transaction tests (10 tests)
-.\Release\test_BlockHeader.exe     # Run block header tests (15 tests)
-.\Release\test_Block.exe           # Run block tests (23 tests)
+.\Release\test_Transaction.exe
+.\Release\test_BlockHeader.exe
+.\Release\test_Block.exe
 ```
 
 ## Testing
 
 The project includes a comprehensive test suite using **Google Test** (v1.17.0):
 
-- **Transaction Tests** (10 tests): Constructor behavior, hashing, serialization, and edge cases
-- **BlockHeader Tests** (15 tests): Header field management, hashing, linking, and mining simulation
-- **Block Tests** (23 tests): Transaction management, merkle root computation, block validation, tampering detection
-
-**Total: 48 comprehensive test cases** covering all core functionality.
+- **Transaction Tests**: Constructor behavior, hashing, serialization, and edge cases
+- **BlockHeader Tests**: Header field construction and serialization (hash methods moved to Block)
+- **Block Tests**: Transaction management, merkle root computation, block validation, and block hashing
 
 For detailed testing documentation, see [Tests/README.md](Tests/README.md).
 
