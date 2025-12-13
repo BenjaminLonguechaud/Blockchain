@@ -45,10 +45,10 @@ TEST(TransactionTest, IDComputedAutomaticallyAndDeterministically) {
 
     Transaction tx({in1}, {out1});
     TXID id1 = tx.txid;
-    TXID id2 = tx.computeHash();
+    tx.computeHash();
 
     ASSERT_FALSE(id1.empty());
-    EXPECT_EQ(id1, id2);  // ID must match the hash
+    EXPECT_EQ(id1, tx.txid);  // ID must match the hash
 }
 
 // ------------------------------------------------------------
@@ -92,9 +92,12 @@ TEST(TransactionTest, SameDataSameHash) {
     sleepShort(); // Make sure timestamp differs for tx2
     Transaction tx2({in}, {out});
 
+    tx1.computeHash();
+    tx2.computeHash();
+
     // Because timestamps differ, hashes MUST differ
     EXPECT_NE(tx1.timestamp, tx2.timestamp);
-    EXPECT_NE(tx1.computeHash(), tx2.computeHash());
+    EXPECT_NE(tx1.txid, tx2.txid);
 }
 
 TEST(TransactionTest, IdenticalTimestampYieldsIdenticalHashes) {
@@ -107,8 +110,11 @@ TEST(TransactionTest, IdenticalTimestampYieldsIdenticalHashes) {
     // Force tx2 timestamp to match tx1
     tx2.timestamp = tx1.timestamp;
 
+    tx1.computeHash();
+    tx2.computeHash();
+
     EXPECT_EQ(tx1.serialize(), tx2.serialize());
-    EXPECT_EQ(tx1.computeHash(), tx2.computeHash());
+    EXPECT_EQ(tx1.txid, tx2.txid);
 }
 
 // ------------------------------------------------------------
@@ -117,7 +123,8 @@ TEST(TransactionTest, IdenticalTimestampYieldsIdenticalHashes) {
 
 TEST(TransactionTest, EmptyInputsOrOutputsAllowedButHashValid) {
     Transaction tx({}, {});
-    EXPECT_FALSE(tx.computeHash().empty());
+    tx.computeHash();
+    EXPECT_FALSE(tx.txid.empty());
 }
 
 TEST(TransactionTest, MultipleInputsOutputsSerializeCorrectly) {
@@ -150,7 +157,8 @@ TEST(TransactionTest, IDStableAfterInitialComputation) {
 
     Transaction tx({in}, {out});
     TXID idFirst = tx.txid;
-    TXID idSecond = tx.computeHash();
+    tx.computeHash();
+    TXID idSecond = tx.txid;
 
     EXPECT_EQ(idFirst, idSecond); // ID stored must match computed hash
 }
