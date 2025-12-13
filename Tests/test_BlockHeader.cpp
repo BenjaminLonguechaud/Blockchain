@@ -35,7 +35,6 @@ TEST(BlockHeaderTest, SerializeIncludesAllFields) {
     header.timestamp = 1234567890;
     header.nonce = 12345;
     header.difficulty = 256;
-    header.blockHash = "deadbeef";
 
     std::string serialized = header.serialize();
 
@@ -46,7 +45,6 @@ TEST(BlockHeaderTest, SerializeIncludesAllFields) {
     EXPECT_NE(serialized.find("11223344"), std::string::npos);    // hashMerkleRoot
     EXPECT_NE(serialized.find("12345"), std::string::npos);       // nonce
     EXPECT_NE(serialized.find("256"), std::string::npos);         // difficulty
-    EXPECT_NE(serialized.find("deadbeef"), std::string::npos);    // blockHash
 }
 
 TEST(BlockHeaderTest, SerializationIsConsistent) {

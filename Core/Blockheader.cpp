@@ -29,7 +29,6 @@ std::string BlockHeader::serialize() const
 	oss << hashMerkleRoot;
 	oss << nonce;
 	oss << difficulty;
-	oss << blockHash;
 
 	return oss.str();
 }

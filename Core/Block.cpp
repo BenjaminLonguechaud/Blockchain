@@ -118,7 +118,6 @@ std::string Block::serialize() const
     oss << header.timestamp;
     oss << header.nonce;
     oss << header.difficulty;
-    oss << header.blockHash;
 
     // Serialize all transactions
     for (const auto& tx : transactions) {
