@@ -1,7 +1,7 @@
 #ifndef BLOCKHEADER_H
 #define BLOCKHEADER_H
 
-#include <CoreObject.h>
+#include "CoreObject.h"
 #include <string>
 
 /**

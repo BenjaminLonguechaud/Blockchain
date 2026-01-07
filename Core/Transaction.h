@@ -1,7 +1,7 @@
 #ifndef TRANSACTION_H
 #define TRANSACTION_H
 
-#include <CoreObject.h>
+#include "CoreObject.h"
 #include <vector>
 #include <cstdint>
 
