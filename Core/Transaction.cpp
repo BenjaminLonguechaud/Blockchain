@@ -2,7 +2,6 @@
 #include <sstream>
 #include <iomanip>
 #include <chrono>
-#include <openssl/sha.h>
 
 Transaction::Transaction()
     : timestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -83,15 +82,31 @@ std::string Transaction::serialize() const
     return oss.str();
 }
 
-void Transaction::sign()
+void Transaction::sign(EVP_PKEY *pkey)
 {
-    // Placeholder for signing logic
-    // In a real implementation, this would involve cryptographic operations
-    // to sign the transaction inputs using the private keys corresponding
-    // to the public keys in the inputs.
-
-    // For now, we just set a dummy signature for each input
-    for (auto& input : inputs) {
-        input.signature = "dummy_signature";
+    const EVP_MD *md = EVP_sha256();
+    EVP_MD_CTX *md_ctx = EVP_MD_CTX_new();
+    if (!md || !md_ctx)
+    {
+        ERR_print_errors_fp(stderr);
+        abort();
     }
+
+    // 3. Sign the digest
+    // Initialize the signing context
+    if (1 != EVP_DigestSignInit(md_ctx, NULL, md, NULL, pkey))
+    {
+        ERR_print_errors_fp(stderr);
+        abort();
+    }
+    EVP_DigestSignUpdate(md_ctx, txid.c_str(), txid.length());
+    size_t sig_len;
+    EVP_DigestSignFinal(md_ctx, NULL, &sig_len);
+    std::vector<unsigned char> signature(sig_len);
+    if (1 != EVP_DigestSignFinal(md_ctx, signature.data(), &sig_len))
+    {
+        ERR_print_errors_fp(stderr);
+        abort();
+    }
+    txsignature = std::string(reinterpret_cast<char*>(signature.data()), sig_len);
 }

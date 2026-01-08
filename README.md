@@ -111,7 +111,7 @@ cmake --build . --config Release
 
 The project includes a comprehensive test suite using **Google Test** (v1.17.0):
 
-- **Transaction Tests**: Constructor behavior, hashing, serialization, and edge cases
+- **Transaction Tests**: Constructor behavior, hashing, serialization, signature, and edge cases
 - **BlockHeader Tests**: Header field construction and serialization (hash methods moved to Block)
 - **Block Tests**: Transaction management, merkle root computation, block validation, and block hashing
 

@@ -4,6 +4,9 @@
 #include "CoreObject.h"
 #include <vector>
 #include <cstdint>
+#include <openssl/pem.h>
+#include <openssl/sha.h>
+#include <openssl/err.h>
 
 /**
  * @file Transaction.h
@@ -74,7 +77,7 @@ public:
     void computeHash();
 
     // Sign the transaction
-    void sign();
+    void sign(EVP_PKEY *pkey);
 
     // Validate transaction structure
     bool validate() const;

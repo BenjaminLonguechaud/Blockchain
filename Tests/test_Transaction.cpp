@@ -2,6 +2,9 @@
 #include "Transaction.h"
 #include <chrono>
 #include <thread>
+#include <openssl/evp.h>
+#include <openssl/pem.h>
+#include <openssl/err.h>
 
 // Helper: sleep a little for timestamp differentiation
 static void sleepShort() {
@@ -161,4 +164,81 @@ TEST(TransactionTest, IDStableAfterInitialComputation) {
     TXID idSecond = tx.txid;
 
     EXPECT_EQ(idFirst, idSecond); // ID stored must match computed hash
+}
+// ------------------------------------------------------------
+//  Signing Tests
+// ------------------------------------------------------------
+
+// Helper function to generate an RSA key pair for testing
+EVP_PKEY* GenerateTestKeyPair() {
+    EVP_PKEY *pkey = NULL;
+    EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_RSA, NULL);
+
+    if (!ctx) {
+        ERR_print_errors_fp(stderr);
+        return NULL;
+    }
+
+    if (EVP_PKEY_keygen_init(ctx) <= 0) {
+        ERR_print_errors_fp(stderr);
+        EVP_PKEY_CTX_free(ctx);
+        return NULL;
+    }
+
+    if (EVP_PKEY_CTX_set_rsa_keygen_bits(ctx, 2048) <= 0) {
+        ERR_print_errors_fp(stderr);
+        EVP_PKEY_CTX_free(ctx);
+        return NULL;
+    }
+
+    if (EVP_PKEY_keygen(ctx, &pkey) <= 0) {
+        ERR_print_errors_fp(stderr);
+        EVP_PKEY_CTX_free(ctx);
+        return NULL;
+    }
+
+    EVP_PKEY_CTX_free(ctx);
+    return pkey;
+}
+
+TEST(TransactionTest, SignatureGeneratedSuccessfully) {
+    TxIn in("prev", 0, "sig", "pk");
+    TxOut out(100, "alice");
+
+    Transaction tx({in}, {out});
+    EVP_PKEY *pkey = GenerateTestKeyPair();
+    ASSERT_NE(pkey, nullptr) << "Failed to generate test key pair";
+
+    // Before signing, signature should be empty
+    EXPECT_EQ(tx.txsignature, "");
+
+    tx.sign(pkey);
+
+    // After signing, signature should not be empty
+    EXPECT_NE(tx.txsignature, "");
+
+    EVP_PKEY_free(pkey);
+}
+
+TEST(TransactionTest, DifferentTransactionsDifferentSignatures) {
+    TxIn in1("txA", 0, "sig", "pk");
+    TxOut out1(100, "alice");
+
+    TxIn in2("txB", 0, "sig", "pk");
+    TxOut out2(100, "alice");
+
+    Transaction tx1({in1}, {out1});
+    Transaction tx2({in2}, {out2});
+
+    EVP_PKEY *pkey = GenerateTestKeyPair();
+    ASSERT_NE(pkey, nullptr);
+
+    tx1.sign(pkey);
+    tx2.sign(pkey);
+
+    // Different transactions should produce different signatures
+    // (with extremely high probability for RSA signatures)
+    EXPECT_NE(tx1.txsignature, tx2.txsignature);
+
+    EVP_PKEY_free(pkey);
 }
