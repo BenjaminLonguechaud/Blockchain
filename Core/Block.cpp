@@ -8,10 +8,10 @@
 // -----------------------------------------------------------------------------
 void Block::computeHash()
 {
-	// Converts a Transaction object into a single, deterministic
-	// sequence of bytes (or a string) that can be hashed
-	std::string data = serialize();
-	unsigned char hash[SHA256_DIGEST_LENGTH];
+    // Converts a Transaction object into a single, deterministic
+    // sequence of bytes (or a string) that can be hashed
+    std::string data = serialize();
+    unsigned char hash[SHA256_DIGEST_LENGTH];
 
     SHA256(reinterpret_cast<const unsigned char*>(data.c_str()), data.size(), hash);
 

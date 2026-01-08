@@ -2,8 +2,7 @@
 #include <sstream>
 
 // -----------------------------------------------------------------------------
-//  computeHash()
-//  Produces the block hash by hashing the serialized block header.
+//  BlockHeader Constructor with Default Values
 // -----------------------------------------------------------------------------
 BlockHeader::BlockHeader()
 	: version(1),

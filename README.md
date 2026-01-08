@@ -120,6 +120,7 @@ For detailed testing documentation, see [Tests/README.md](Tests/README.md).
 ## Dependencies
 
 ### External Libraries
+- **OpenSSL**: Cryptographic library for SHA-256 hashing (core library)
 - **Google Test**: C++ testing framework (for tests only)
 
 ### Build System
