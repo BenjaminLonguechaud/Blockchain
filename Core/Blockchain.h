@@ -12,6 +12,10 @@
  */
 class Blockchain : public CoreObject {
 public:
+
+    /**
+     * Default constructor
+     */
     Blockchain();
 
     /**
@@ -35,12 +39,14 @@ public:
      */
     std::string serialize() const override;
 
-    std::vector<Block> chain;
+    void print() const;
 
 private:
     // The first block of a block chain
     // https://en.bitcoin.it/wiki/Genesis_block
     Block createGenesisBlock();
+
+    std::vector<Block> _chain;
 
 };
 

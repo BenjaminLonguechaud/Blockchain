@@ -1,5 +1,6 @@
 #include "Blockheader.h"
 #include <sstream>
+#include <iostream>
 
 // -----------------------------------------------------------------------------
 //  BlockHeader Constructor with Default Values
@@ -30,4 +31,20 @@ std::string BlockHeader::serialize() const
     oss << difficulty;
 
     return oss.str();
+}
+
+// -----------------------------------------------------------------------------
+//  print()
+//  Prints all BlockHeader parameters to std::cout
+// -----------------------------------------------------------------------------
+void BlockHeader::print() const
+{
+    std::cout << "BlockHeader Information:" << std::endl;
+    std::cout << "  Version: " << version << std::endl;
+    std::cout << "  Previous Block Hash: " << hashPrevBlock << std::endl;
+    std::cout << "  Merkle Root Hash: " << hashMerkleRoot << std::endl;
+    std::cout << "  Timestamp: " << timestamp << std::endl;
+    std::cout << "  Nonce: " << nonce << std::endl;
+    std::cout << "  Difficulty: " << difficulty << std::endl;
+    std::cout << "  Block Hash: " << blockHash << std::endl;
 }

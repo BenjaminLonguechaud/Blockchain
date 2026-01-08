@@ -14,7 +14,10 @@
 class Block : public CoreObject {
 public:
 
-    Block(): header(), transactions() {}
+    Block(): _header(), _transactions() {}
+
+    Block(const std::vector<Transaction>& transactions): _header(),
+    _transactions(transactions) {}
 
     /**
      * Mining Method (PoW), repeatedly changes the nonce and recalculates
@@ -25,13 +28,13 @@ public:
     /**
      * Computes the hash of the block.
      */
-    void Block::computeHash();
+    void computeHash();
 
     /**
      * Mines the block by finding a nonce that results in a hash
      * below the target defined by the difficulty.
      */
-    void mineBlock();
+    void mine();
 
     /**
      * Serializes the block into a deterministic string representation.
@@ -39,8 +42,25 @@ public:
      */
     std::string serialize() const override;
 
-    BlockHeader header;
-    std::vector<Transaction> transactions;
+    /**
+     * Accessor to block hash.
+     */
+    const std::string& getHash() const;
+
+    /**
+     * Accessor to previous block hash.
+     */
+    const std::string& getPreviousHash() const;
+
+    const BlockHeader getHeader() const {return _header;};
+    void setHeader(const BlockHeader& header) {_header = header;};
+
+    const std::string& Block::getMerkleRoot() const;
+
+private:
+    BlockHeader _header;
+    std::vector<Transaction> _transactions;
+    std::string _prevBlockHash;
 };
 
 #endif // BLOCK_H

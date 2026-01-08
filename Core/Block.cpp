@@ -22,7 +22,7 @@ void Block::computeHash()
         oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(hash[i]);
     }
 
-    header.blockHash = oss.str();
+    _header.blockHash = oss.str();
 }
 
 // -----------------------------------------------------------------------------
@@ -30,14 +30,14 @@ void Block::computeHash()
 // Repeatedly changes the nonce and recalculates the hash until it meets
 // the difficulty target.
 // -----------------------------------------------------------------------------
-void Block::mineBlock()
+void Block::mine()
 {
-    std::string target(header.difficulty / 4, '0'); // Each hex digit represents 4 bits
+    std::string target(_header.difficulty / 4, '0'); // Each hex digit represents 4 bits
 
     do {
-        header.nonce++;
+        _header.nonce++;
         computeHash();
-    } while (header.blockHash.substr(0, target.size()) != target);
+    } while (_header.blockHash.substr(0, target.size()) != target);
 }
 
 // -----------------------------------------------------------------------------
@@ -48,7 +48,7 @@ void Block::computeMerkleRoot()
 {
     // Step 1: Validate input - Check if the block contains any transactions
     // If empty, do nothing since there's no data to hash
-    if (transactions.empty()) {
+    if (_transactions.empty()) {
         return;
     }
 
@@ -56,7 +56,7 @@ void Block::computeMerkleRoot()
     // Collect all transaction IDs (TXIDs) which will be the leaves of the Merkle tree
     // Each TXID is already a SHA-256 hash of the transaction data
     std::vector<std::string> merkleLeaves;
-    for (const auto& tx : transactions) {
+    for (const auto& tx : _transactions) {
         merkleLeaves.push_back(tx.txid);
     }
 
@@ -104,7 +104,7 @@ void Block::computeMerkleRoot()
     // Step 4: Store the root hash
     // After all iterations, merkleLeaves contains exactly one element: the Merkle root
     // This root is a deterministic hash of all transactions in the block
-    header.hashMerkleRoot = merkleLeaves.front();
+    _header.hashMerkleRoot = merkleLeaves.front();
 }
 
 std::string Block::serialize() const
@@ -112,17 +112,32 @@ std::string Block::serialize() const
     std::ostringstream oss;
 
     // Serialize header information
-    oss << header.version;
-    oss << header.hashPrevBlock;
-    oss << header.hashMerkleRoot;
-    oss << header.timestamp;
-    oss << header.nonce;
-    oss << header.difficulty;
+    oss << _header.version;
+    oss << _header.hashPrevBlock;
+    oss << _header.hashMerkleRoot;
+    oss << _header.timestamp;
+    oss << _header.nonce;
+    oss << _header.difficulty;
 
     // Serialize all transactions
-    for (const auto& tx : transactions) {
+    for (const auto& tx : _transactions) {
         oss << tx.serialize();
     }
 
     return oss.str();
+}
+
+const std::string& Block::getHash() const
+{
+    return _header.blockHash;
+}
+
+const std::string& Block::getPreviousHash() const
+{
+    return _prevBlockHash;
+}
+
+const std::string& Block::getMerkleRoot() const
+{
+    return _header.hashMerkleRoot;
 }

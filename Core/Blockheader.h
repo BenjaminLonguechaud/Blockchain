@@ -56,6 +56,9 @@ public:
     // Serialize the transaction into a deterministic string
     std::string serialize() const override;
 
+    // Print all BlockHeader parameters
+    void print() const;
+
 };
 
 #endif // BLOCKHEADER_H

@@ -1,10 +1,11 @@
 #include "Blockchain.h"
 #include <sstream>
+#include <iostream>
 
 std::string Blockchain::serialize() const
 {
     std::ostringstream oss;
-    for (const auto& block : chain) {
+    for (const auto& block : _chain) {
         oss << block.serialize();
     }
     return oss.str();
@@ -22,13 +23,44 @@ Block Blockchain::createGenesisBlock()
     uint32_t nonce = 2083236893;
     uint32_t difficulty = 0x1d00ffff;
 
-    genesisBlock.header = BlockHeader(version, prevHash, hashMerkleRoot,
-                                      timestamp, nonce, difficulty);
+    genesisBlock.setHeader(BlockHeader(version, prevHash, hashMerkleRoot,
+                                      timestamp, nonce, difficulty));
     return genesisBlock;
 }
 
 Blockchain::Blockchain()
 {
-    chain.push_back(createGenesisBlock());
+    _chain.push_back(createGenesisBlock());
 }
 
+bool Blockchain::addBlock(const Block& newBlock)
+{
+    // Check previous hash
+    const std::string& lastHash = _chain.empty() ? "" : _chain.back().getHash();
+    if (!_chain.empty() && newBlock.getPreviousHash() != lastHash) {
+        std::cerr << "Error: previous hash does not match chain tip\n";
+        return false;
+    }
+
+    // TODO: Validate Merkle root and proof of work
+
+    _chain.push_back(newBlock);
+    return true;
+}
+
+bool Blockchain::validateChain() const
+{
+    // TODO
+
+    return true;
+}
+
+void Blockchain::print() const
+{
+    std::cout << "=== Blockchain (" << _chain.size() << " blocks) ===\n";
+
+    for (const auto& block : _chain) {
+        std::cout << "---------------------------------------\n";
+        block.getHeader().print();
+    }
+}
