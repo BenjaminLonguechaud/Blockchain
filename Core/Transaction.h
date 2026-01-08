@@ -58,12 +58,10 @@ public:
     Transaction();
 
     Transaction(std::string id,
-                    std::string signature,
                     std::vector<TxIn> in,
                     std::vector<TxOut> out,
                     uint64_t ts) :
             txid(std::move(id)),
-            txsignature(std::move(signature)),
             inputs(std::move(in)),
             outputs(std::move(out)),
             timestamp(ts) {}
