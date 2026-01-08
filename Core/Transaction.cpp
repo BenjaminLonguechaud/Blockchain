@@ -2,7 +2,7 @@
 #include <sstream>
 #include <iomanip>
 #include <chrono>
-
+#include <openssl/sha.h>
 
 Transaction::Transaction()
     : timestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -52,17 +52,14 @@ void Transaction::computeHash()
     // Converts a Transaction object into a single, deterministic
     // sequence of bytes (or a string) that can be hashed
     std::string data = serialize();
-    CryptoPP::SHA256 hash;
-    std::string digest;
-    CryptoPP::StringSource(data, true,
-        new CryptoPP::HashFilter(hash,
-            new CryptoPP::HexEncoder(
-                new CryptoPP::StringSink(digest)
-            )
-        )
-    );
-
-    txid = digest;
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256(reinterpret_cast<const unsigned char*>(data.c_str()), data.size(), hash);
+    // Convert the hash to a hex string
+    std::ostringstream oss;
+    for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
+        oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(hash[i]);
+    }
+    txid = oss.str();
 }
 
 // -----------------------------------------------------------------------------

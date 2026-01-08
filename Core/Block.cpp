@@ -1,5 +1,7 @@
 #include "Block.h"
 #include <sstream>
+#include <iomanip>
+#include <openssl/sha.h>
 
 // -----------------------------------------------------------------------------
 //  computeHash()
@@ -9,17 +11,18 @@ void Block::computeHash()
 	// Converts a Transaction object into a single, deterministic
 	// sequence of bytes (or a string) that can be hashed
 	std::string data = serialize();
-	CryptoPP::SHA256 hash;
-	std::string digest;
-    CryptoPP::StringSource(data, true,
-        new CryptoPP::HashFilter(hash,
-            new CryptoPP::HexEncoder(
-                new CryptoPP::StringSink(digest)
-            )
-        )
-    );
+	unsigned char hash[SHA256_DIGEST_LENGTH];
 
-    header.blockHash = digest;
+    SHA256(reinterpret_cast<const unsigned char*>(data.c_str()), data.size(), hash);
+
+    // Convert the hash to a hex string
+
+    std::ostringstream oss;
+    for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
+        oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(hash[i]);
+    }
+
+    header.blockHash = oss.str();
 }
 
 // -----------------------------------------------------------------------------
@@ -75,18 +78,15 @@ void Block::computeMerkleRoot()
                 std::string combined = merkleLeaves[i] + merkleLeaves[i + 1];
 
                 // Step 3b-ii: Compute SHA-256 hash of the concatenated pair
-                CryptoPP::SHA256 hash;
-                std::string digest;
-                CryptoPP::StringSource(combined, true,
-                    new CryptoPP::HashFilter(hash,
-                        new CryptoPP::HexEncoder(
-                            new CryptoPP::StringSink(digest)
-                        )
-                    )
-                );
-
+                unsigned char hash[SHA256_DIGEST_LENGTH];
+                SHA256(reinterpret_cast<const unsigned char*>(combined.c_str()), combined.size(), hash);
+                // Convert the hash to a hex string
+                std::ostringstream oss;
+                for (int j = 0; j < SHA256_DIGEST_LENGTH; ++j) {
+                    oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(hash[j]);
+                }
                 // Step 3b-iii: Add the resulting parent hash to the next level
-                newLevel.push_back(digest);
+                newLevel.push_back(oss.str());
             } else {
                 // Step 3c: Handle odd number of leaves at current level
                 // If there's an odd leaf remaining with no pair,

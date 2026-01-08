@@ -2,8 +2,6 @@
 #define COREOBJECT_H
 
 #include <string>
-#include <../cryptopp/sha.h>
-#include <../cryptopp/hex.h>
 
 // 256-bit hash represented as an hex string
 using TXID = std::string;

@@ -24,7 +24,7 @@ Blockchain/
 ├── Core/
 │   ├── CoreObject.h                  # Parent Class
 │	├── Transaction.h                 # Transaction class definition
-│   ├── Transaction.cpp               # Transaction implementation with SHA-256 hashing
+│   ├── Transaction.cpp               # Transaction implementation with OpenSSL SHA-256 hashing
 │   ├── BlockHeader.h                 # BlockHeader class definition
 │   ├── BlockHeader.cpp               # BlockHeader implementation for block metadata
 │   ├── Block.h                       # Block class definition
@@ -35,9 +35,7 @@ Blockchain/
 │   ├── test_Transaction.cpp          # Google Test test suite (10 tests)
 │   ├── test_BlockHeader.cpp          # Google Test test suite (15 tests)
 │   ├── test_Block.cpp                # Google Test test suite (23 tests)
-│   ├── cryptopp_stubs.cpp            # Stub implementations for CryptoPP utilities
-│   ├── googletest/                   # Google Test framework (v1.17.0)
-├── cryptopp/                         # Crypto++ library source files
+│   └──googletest/                   # Google Test framework (v1.17.0)
 ```
 
 ## Key Components
@@ -75,7 +73,7 @@ The `Block` class combines transactions with a block header:
 
 ### Cryptographic Foundation
 
-- **Hashing Algorithm**: SHA-256 via Crypto++ library
+- **Hashing Algorithm**: SHA-256 via OpenSSL library
 - **Merkle Trees**: Efficient hierarchical transaction verification
 - **Determinism**: Same data always produces the same hash
 - **Immutability**: Changing any transaction data changes the merkle root
@@ -122,7 +120,6 @@ For detailed testing documentation, see [Tests/README.md](Tests/README.md).
 ## Dependencies
 
 ### External Libraries
-- **Crypto++**: Cryptography library for SHA-256 hashing
 - **Google Test**: C++ testing framework (for tests only)
 
 ### Build System
