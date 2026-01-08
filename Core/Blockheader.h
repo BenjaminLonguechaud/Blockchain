@@ -11,9 +11,9 @@
  * https://en.bitcoin.it/wiki/Block_hashing_algorithm
  * @details This class encapsulates the essential metadata for a blockchain block,
  *          including version, previous block hash, Merkle root, timestamp, difficulty target,
- *		  	and nonce. It provides methods for serialization, hash computation, and validation.
- * 			A block header in a blockchain is a concise summary (metadata) of a block, used for
- * 			linking blocks, securing the chain, and efficient verification.
+ *              and nonce. It provides methods for serialization, hash computation, and validation.
+ *             A block header in a blockchain is a concise summary (metadata) of a block, used for
+ *             linking blocks, securing the chain, and efficient verification.
  *
  * For Proof-of-Work (Mining), Miners hash the header (including the nonce) repeatedly until they
  * find a hash below a target difficulty, solving the puzzle and adding the block.
@@ -43,9 +43,9 @@ public:
                     const std::string& prevHash,
                     const std::string& merkleRoot,
                     uint64_t time,
-					uint32_t nonce,
+                    uint32_t nonce,
                     uint32_t diff)
-	    : version(ver),
+        : version(ver),
           hashPrevBlock(prevHash),
           hashMerkleRoot(merkleRoot),
           timestamp(time),

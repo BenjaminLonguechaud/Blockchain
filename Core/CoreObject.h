@@ -13,7 +13,7 @@ using TXID = std::string;
 
 class CoreObject {
 public:
-	// Convert the whole transaction into a deterministic string
+    // Convert the whole transaction into a deterministic string
     virtual std::string serialize() const = 0;
 
     virtual ~CoreObject() = default;

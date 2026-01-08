@@ -1,4 +1,5 @@
 #include "Blockchain.h"
+#include <sstream>
 
 std::string Blockchain::serialize() const
 {
