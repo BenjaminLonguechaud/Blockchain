@@ -134,7 +134,7 @@ const std::string& Block::getHash() const
 
 const std::string& Block::getPreviousHash() const
 {
-    return _prevBlockHash;
+    return _header.hashPrevBlock;
 }
 
 const std::string& Block::getMerkleRoot() const

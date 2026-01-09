@@ -14,10 +14,10 @@
 class Block : public CoreObject {
 public:
 
-    Block(): _header(), _transactions() {}
+    Block(std::string prevHash): _header(), _transactions(){ _header.hashPrevBlock = prevHash;}
 
-    Block(const std::vector<Transaction>& transactions): _header(),
-    _transactions(transactions) {}
+    Block(const std::vector<Transaction>& transactions, std::string prevHash): _header(),
+    _transactions(transactions) { _header.hashPrevBlock = prevHash;}
 
     /**
      * Mining Method (PoW), repeatedly changes the nonce and recalculates
@@ -60,7 +60,6 @@ public:
 private:
     BlockHeader _header;
     std::vector<Transaction> _transactions;
-    std::string _prevBlockHash;
 };
 
 #endif // BLOCK_H
