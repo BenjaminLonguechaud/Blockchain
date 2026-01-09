@@ -1,6 +1,7 @@
 #include "Blockchain.h"
 #include <sstream>
 #include <iostream>
+#include <chrono>
 
 std::string Blockchain::serialize() const
 {
@@ -13,18 +14,21 @@ std::string Blockchain::serialize() const
 
 Block Blockchain::createGenesisBlock()
 {
-    Block genesisBlock;
+    Block genesisBlock("0");
     // The genesis block is almost always hardcoded into the software of the
     // applications that utilize its block chain.
     uint64_t version = 1;
     std::string prevHash = "0"; // No previous block
     std::string hashMerkleRoot = "0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b";
-    uint64_t timestamp = 1231006505;
-    uint32_t nonce = 2083236893;
-    uint32_t difficulty = 0x1d00ffff;
+    uint64_t timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()).count();
+    uint32_t nonce = 0;
+    uint32_t difficulty = 0x3;
 
     genesisBlock.setHeader(BlockHeader(version, prevHash, hashMerkleRoot,
                                       timestamp, nonce, difficulty));
+    genesisBlock.mine();
+    genesisBlock.computeMerkleRoot();
     return genesisBlock;
 }
 

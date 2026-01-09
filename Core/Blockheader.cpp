@@ -11,7 +11,7 @@ BlockHeader::BlockHeader()
       hashMerkleRoot(""),
       timestamp(0),
       nonce(0),
-      difficulty(0),
+      difficulty(0x3),
       blockHash("")
 {
 }

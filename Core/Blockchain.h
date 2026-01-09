@@ -39,6 +39,14 @@ public:
      */
     std::string serialize() const override;
 
+    /**
+     * Accessor to the latest block in the chain.
+     */
+    const Block getLatestBlock() const { return _chain.back(); }
+
+    /**
+     * Prints the entire blockchain to standard output.
+     */
     void print() const;
 
 private:

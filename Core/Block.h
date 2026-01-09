@@ -52,10 +52,25 @@ public:
      */
     const std::string& getPreviousHash() const;
 
+    /**
+     * Accessor to block header.
+     */
     const BlockHeader getHeader() const {return _header;};
+
+    /**
+     * Mutator to set block header.
+     */
     void setHeader(const BlockHeader& header) {_header = header;};
 
+    /**
+     * Accessor to Merkle root.
+     */
     const std::string& Block::getMerkleRoot() const;
+
+    /**
+     * Validates the block's hash against the difficulty target.
+     */
+    bool validateBlock(unsigned int difficulty) const;
 
 private:
     BlockHeader _header;

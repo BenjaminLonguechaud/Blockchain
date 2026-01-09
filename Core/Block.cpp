@@ -32,12 +32,12 @@ void Block::computeHash()
 // -----------------------------------------------------------------------------
 void Block::mine()
 {
-    std::string target(_header.difficulty / 4, '0'); // Each hex digit represents 4 bits
+    std::string target(_header.difficulty, '0');
 
     do {
         _header.nonce++;
         computeHash();
-    } while (_header.blockHash.substr(0, target.size()) != target);
+    } while (_header.blockHash.substr(0, _header.difficulty) != target);
 }
 
 // -----------------------------------------------------------------------------
@@ -140,4 +140,10 @@ const std::string& Block::getPreviousHash() const
 const std::string& Block::getMerkleRoot() const
 {
     return _header.hashMerkleRoot;
+}
+
+bool Block::validateBlock(unsigned int difficulty) const {
+    std::string target(difficulty, '0');
+    return _header.blockHash.substr(0, difficulty) == target &&
+           _header.blockHash == _header.blockHash;
 }

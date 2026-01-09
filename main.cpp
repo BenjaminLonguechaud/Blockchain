@@ -90,7 +90,7 @@ int main() {
     // Create Block with this transaction
     std::cout << "[4] Creating block..." << std::endl;
     std::vector<Transaction> transactions = { tx };
-    Block block(transactions);
+    Block block(transactions, blockchain.getLatestBlock().getHash());
 
     // Block mining
     std::cout << "[5] Mining block..." << std::endl;
@@ -98,11 +98,14 @@ int main() {
     std::cout << "[6] Block mined: " << block.getHash() << "\n";
 
     // Compute Merkle root
-    block.computeMerkleRoot();
     std::cout << "[7] Compute Merkle root: " << block.getMerkleRoot() << "\n";
+    block.computeMerkleRoot();
+
+    std::cout << "[8] Add Block to Blockchain: " << block.getMerkleRoot() << "\n";
+    blockchain.addBlock(block);
 
     // Validate blockchain
-    std::cout << "[8] Validating block..." << std::endl;
+    std::cout << "[9] Validating block..." << std::endl;
     bool isValid = blockchain.validateChain();
     std::cout << "    Block validation result: " << (isValid ? "VALID" : "INVALID") << std::endl << std::endl;
 
